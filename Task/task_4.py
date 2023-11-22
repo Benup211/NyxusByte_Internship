@@ -4,4 +4,4 @@ import re
 user_sentence=input("Enter a sentence:")
 user_sentence.lower()
 list_of_vowel=re.findall(r'[aeiou]',user_sentence)
-print(f"Total vowel used in the {user_sentence} is {len(list_of_vowel)}")
+print(f"Total vowel used in the {user_sentence} is {len(list_of_vowel)} for {list_of_vowel}")
