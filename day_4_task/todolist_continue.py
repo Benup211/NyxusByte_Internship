@@ -1,18 +1,24 @@
 class TodoList:
     def __init__(self):
         self.help_message()
-        self._todo_list=list()
+        self.Todolist_Innitialization()
     def help_message(self):
         print(f"{'Todo List Program':#^100}")
         print(f"{'add->add a task to the to-do list':-^100}")
         print(f"{'complete->mark a task as complete':-^100}")
+        print(f"{'delete->Delete the todo list and take it to the bin if its not permanent':-^100}")
         print(f"{'viewall->view the current task in the todo list':-^100}")
         print(f"{'viewcomplete->view the completed task in todo list':-^100}")
         print(f"{'viewimcomplete->view all the imcomplete task in the todo list':-^100}")
+        print(f"{'viewbin->view all the task that are deleted and are currently in the bin'}")
+        print(f"{'restore->restore the deleted task from the bin':-^100}")
+        print(f"{'clearbin->delete all the to-dos that are presented in the bin':-^100}")
         print(f"{'help->display all the help message':-^100}")
         print(f"{'exit->exit the program':-^100}")
     def Todolist_Innitialization(self):
-        print("Initialize todo empty list")
+        self._todo_list=list()
+        self._todo_bin=list()
+        print("Initialize todo empty list and bin")
     def add(self,task_name,description):
         if len(self._todo_list)>0:
             matched_task=False
@@ -56,6 +62,24 @@ class TodoList:
                     print(f"Task name={task['task']},Description={task['description']},status={task['status']}")
         else:
             print(f"{'Todo List is empty':#^100}")
+    def delete_task(self,task_name):
+        if len(self._todo_list)>0:
+            matched_task=False
+            for task in self._todo_list:
+                if task['task']==task_name:
+                    matched_task=True
+                    break
+            if matched_task:
+                choice=input("Do you want to delete permanently[yes/no]:").lower()
+            if choice=='yes' or choice=='y':
+                self._todo_list.remove(task)
+                print(f"{'Task is deleted permanently':#^100}")
+            else:
+                self._todo_bin.append(task)
+                self._todo_list.remove(task)
+                print(f"{'Task is added to bin':#^100}")
+        else:
+            print(f"{'Todo List is empty':#^100}")
     def incompleted_view(self):
         if len(self._todo_list)>0:
             print(f"{'Todo list Incompleted task':#^100}")
@@ -64,12 +88,37 @@ class TodoList:
                     print(f"Task name={task['task']},Description={task['description']},status={task['status']}")
         else:
             print(f"{'Todo List is empty':#^100}")
+    def view_bin(self):
+        if len(self._todo_bin)>0:
+            print(f"{'Todo Bin':#^100}")
+            for task in self._todo_bin:
+                print(f"Task name={task['task']},Description={task['description']},status={task['status']}")
+        else:
+            print(f"{'Todo Bin is empty':#^100}")
+    def restore(self,task_name):
+        matched_task=False
+        if len(self._todo_bin)>0:
+            for task in self._todo_bin:
+                if task['task']==task_name:
+                    matched_task=True
+                    break
+            if matched_task:
+                self._todo_list.append(task)
+                self._todo_bin.remove(task)
+                print(f"{'Task Restored Sucessfully':#^100}")
+            else:
+                print(f"Given {task_name} task is not in the bin")
+        else:
+            print(f"{'Todo Bin is empty':#^100}")
+    def clearbin(self):
+        self._todo_bin=list()
+        print(f"{'Todo Bin is cleared sucessfully':#^100}")
     def invalid_view(self):
         print(f"{'Invalid command':#^100}")
         self.help_message()
 Todo_ins=TodoList()
 while(1):
-    command=input("Enter your command [add,complete,viewall,viewcomplete,viewincomplete,help,exit]:")
+    command=input("Enter your command [add,complete,delete,viewall,viewcomplete,viewincomplete,restore,viewbin,clearbin,help,exit]:")
     match command:
         case 'add':
             tsk_name=input("Enter a task name:")
@@ -78,12 +127,22 @@ while(1):
         case 'complete':
             tsk_name=input("Enter a task to set it complete:")
             Todo_ins.complete(tsk_name)
+        case 'delete':
+            tsk_name=input("Enter a task name:")
+            Todo_ins.delete_task(tsk_name)
         case 'viewall':
             Todo_ins.view_all()
         case 'viewcomplete':
             Todo_ins.competed_view()
         case 'viewincomplete':
             Todo_ins.incompleted_view()
+        case 'restore':
+            tsk_name=input("Enter a task name:")
+            Todo_ins.restore(tsk_name)
+        case 'viewbin':
+            Todo_ins.view_bin()
+        case 'clearbin':
+            Todo_ins.clearbin()
         case 'help':
             Todo_ins.help_message()
         case 'exit':
