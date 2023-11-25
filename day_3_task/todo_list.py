@@ -1,7 +1,7 @@
 class TodoList:
     def __init__(self):
         self.help_message()
-        self._todo_list=list()
+        self.Todolist_Innitialization()
     def help_message(self):
         print(f"{'Todo List Program':#^100}")
         print(f"{'add->add a task to the to-do list':-^100}")
@@ -12,6 +12,7 @@ class TodoList:
         print(f"{'help->display all the help message':-^100}")
         print(f"{'exit->exit the program':-^100}")
     def Todolist_Innitialization(self):
+        self._todo_list=list()
         print("Initialize todo empty list")
     def add(self,task_name,description):
         if len(self._todo_list)>0:
