@@ -11,7 +11,7 @@ class abstractInventory(ABC):
         pass
     def LowStockReport(self):
         pass
-class InventoryItem:
+class InventoryItem(abstractInventory):
     _Inventory_list=list()
     def __init__(self):
         print("Inventory Instance Created")
@@ -69,15 +69,15 @@ class InventoryItem:
                         choice=input("Update [price,quantity,or category]:")
                         match choice:
                             case 'price':
-                                price=input(f"Enter new price for {name}:")
+                                price=int(input(f"Enter new price for {name}:"))
                                 temp['price']=price
                                 break
                             case 'quantity':
-                                quantity=input(f"Enter new quantityfor {name}:")
+                                quantity=int(input(f"Enter new quantityfor {name}:"))
                                 temp['quantity']=quantity
                                 break
                             case 'category':
-                                category=input(f"Enter new category for {name}:")
+                                category=int(input(f"Enter new category for {name}:"))
                                 temp['category']=category
                                 break
                             case default:
@@ -113,8 +113,9 @@ class InventoryItem:
             print(f"{'Inventory Item is Empty':#^100}")
 class InheritInventoryItem(InventoryItem):
     def __str__(self):
-        print("Inherit from Inventory Item")
+        return ("Inherit from Inventory Item")
 NyxusInv=InheritInventoryItem()
+print(NyxusInv)
 while(1):
     command=input("Enter your command [add,remove,update,view,stock,exit]:")
     match command:
