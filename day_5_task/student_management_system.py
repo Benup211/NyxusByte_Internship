@@ -2,7 +2,7 @@ from copy import deepcopy
 class Student:
     _student_list=list()
     def __init__(self):
-        _student_list=list()
+        print("Student Management App Instance Created")
     def __str__(self):
         print(f"{'Student Management System':#^100}")
     def AddStudent(self):
