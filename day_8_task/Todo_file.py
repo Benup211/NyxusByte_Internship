@@ -68,6 +68,19 @@ class TodoList:
                     print(f"Task name={task['task']},Description={task['description']},status={task['status']}")
         else:
             print(f"{'Todo List is empty':#^100}")
+    def deleteTask(self):
+        if len(self._todo_list)>0:
+            tsk_name=input("enter task name to delete:")
+            match_found=False
+            for task in self._todo_list:
+                if task['task']==tsk_name:
+                    match_found=True
+                    break
+            if match_found:
+                self._todo_list.remove(task)
+                print(f"Task {tsk_name} sucessfully removed")
+        else:
+            print(f"{'Todo List is empty':#^100}")
     def invalid_view(self):
         print(f"{'Invalid command':#^100}")
         self.help_message()
@@ -81,7 +94,7 @@ for f in todofile:
 todofile.close()
 Todo_ins=TodoList(file_value_in_list)
 while(1):
-    command=input("Enter your command [add,complete,viewall,viewcomplete,viewincomplete,help,exit]:")
+    command=input("Enter your command [add,complete,delete,viewall,viewcomplete,viewincomplete,help,exit]:")
     match command:
         case 'add':
             tsk_name=input("Enter a task name:")
@@ -90,6 +103,8 @@ while(1):
         case 'complete':
             tsk_name=input("Enter a task to set it complete:")
             Todo_ins.complete(tsk_name)
+        case 'delete':
+            Todo_ins.deleteTask()
         case 'viewall':
             Todo_ins.view_all()
         case 'viewcomplete':

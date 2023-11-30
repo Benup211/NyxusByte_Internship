@@ -1,2 +1,0 @@
-{'task': 't1', 'description': 'd1', 'status': 'complete'}
-{'task': 't2', 'description': 'd2', 'status': 'complete'}
