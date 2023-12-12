@@ -1,13 +1,15 @@
 {% extends 'index.html' %}
 {% block product %}
-    <h1>product List:</h1>
-    <ul>
-        {% for product in json_val %}
-            <li>
-                <h2>Name:{{product.product_name}}</h2>
-                <p>Description:{{product.description}}</p>
-                <p>Price:{{product.price}}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    <h1 class="text-center mt-3">product List:</h1>
+    <div class="d-flex flex-wrap justify-content-center">
+    {% for product in json_val %}
+        <div class="card text-bg-secondary m-3" style="max-width: 18rem;">
+            <div class="card-header">{{product.product_name}}</div>
+            <div class="card-body">
+            <h5 class="card-title">Price:{{product.price}}</h5>
+            <p class="card-text">Description:{{product.description}}</p>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
 {% endblock %}
