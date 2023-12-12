@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% block product %}
+    <h1>product List:</h1>
+    <ul>
+        {% for product in json_val %}
+            <li>
+                <h2>Name:{{product.product_name}}</h2>
+                <p>Description:{{product.description}}</p>
+                <p>Price:{{product.price}}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
