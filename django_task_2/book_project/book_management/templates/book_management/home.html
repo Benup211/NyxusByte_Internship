@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% block book %}
+    <h1 class="text-center mt-3">Book List:</h1>
+    <div class="d-flex flex-wrap justify-content-center">
+    {% for b in book %}
+        <div class="card text-bg-secondary m-3" style="max-width: 18rem;">
+            <div class="card-header">{{b.book_title}}</div>
+            <div class="card-body">
+            <h5 class="card-title">Pub_Date:{{b.pub_date}}</h5>
+            <p class="card-text">Author:{{b.author}}</p>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
