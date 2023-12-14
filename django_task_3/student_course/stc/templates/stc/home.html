@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+{% block home %}
+    <h2 class="text-center mt-3">Student Course Relationship</h2>
+    <div class="d-flex flex-wrap justify-content-center">
+        {% for student,course in stu_val.items %}
+            <div class="card text-bg-secondary m-3" style="max-width: 18rem;">
+                <div class="card-header">{{student}}</div>
+                <div class="card-body">
+                <h5 class="card-title">Enrolled Course:</h5>
+                <ul class="list-group">
+                {% for c in course %}
+                    <li class="list-group-item">{{c}}</li>
+                {% endfor %}
+                </ul>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    <h2 class="text-center mt-3">Teacher Course Relationship</h2>
+    <div class="d-flex flex-wrap justify-content-center">
+    {% for teacher,course in t_val.items %}
+            <div class="card text-bg-secondary m-3" style="max-width: 18rem;">
+                <div class="card-header">{{teacher}}</div>
+                <div class="card-body">
+                <h5 class="card-title">Teaching Course:</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">{{course}}</li>
+                </ul>
+                </div>
+            </div>
+    {% endfor %}
+    </div>
+{% endblock %}
