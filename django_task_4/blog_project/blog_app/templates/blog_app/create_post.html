@@ -1,1 +1,38 @@
 {% extends 'index.html' %}
+{% block content %}
+
+  <div class="container mt-3">
+    <h2>Create Post</h2>
+    {% if error == True %}
+        <p class="text-danger">Error Occur</p>
+    {% endif %}
+    <form method="post" action="{% url 'blog_app:create' %}">
+        {% csrf_token %}
+      <div class="form-group mt-2">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" name="title" id="title" placeholder="Enter your blog title">
+      </div>
+
+      <div class="form-group mt-2">
+        <label for="content" style="display: block;">Content:</label>
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Enter blog content"></textarea>
+      </div>
+
+      <div class="form-group mt-2">
+        <label for="dob">Publish Date:</label>
+        <input type="datetime-local" class="form-control" id="dob" name="pub_date">
+      </div>
+
+      <div class="form-group mt-2">
+        <label for="Tag">Tag:</label>
+        <select class="form-control" id="Tag" name="tag">
+            {% for t in tag_list %}
+                <option value="{{t}}">{{t}}</option>
+            {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+
+    </form>
+  </div>
+{% endblock %}

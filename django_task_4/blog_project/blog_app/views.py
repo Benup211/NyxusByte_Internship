@@ -3,7 +3,7 @@ from django.views import View
 from .models import Post,Tag,Comment
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-from blog_app.forms import LoginForm
+from blog_app.forms import LoginForm,Createblog
 # Create your views here.
 class all_blog(View):
     def get(self,request,*args,**kwargs):
@@ -54,10 +54,34 @@ class blog_logout(View):
         return redirect("blog_app:login")
 class create_post(View):
     def get(self,request,*args,**kwargs):
+        tag_val=Tag.objects.all()
+        tag_list=list()
+        for t in tag_val:
+            tag_list.append(t.tag_user)
         context={
             "create_post":"active",
+            "tag_list":tag_list,
         }
         return render(request,'blog_app/create_post.html',context)
+    def post(self,request,*args,**kwargs):
+        context={}
+        form=Createblog(request.POST)
+        if form.is_valid()==False:
+            form=Createblog()
+            context={
+                'error':True
+            }
+        else:
+            title=form.cleaned_data['title']
+            content=form.cleaned_data['content']
+            pub_date=form.cleaned_data['pub_date']
+            tag_val=form.cleaned_data['tag']
+            tag_user=User.objects.get(username=tag_val)
+            new_post = Post.objects.create(title=title, content=content, author=request.user, pub_date=pub_date)
+            new_post.post_tag.add(tag_user.id)
+            new_post.save()
+            return redirect("blog_app:all_blog")
+        return render(request,"blog_app/create_post.html",context)
 
 class blog_detail(View):
     def get(self,request,pid,*args,**kwargs):
