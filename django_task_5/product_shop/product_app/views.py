@@ -11,12 +11,12 @@ class create_product(View):
         }
         return render(request,'product_app/create_product.html',context)
     def post(self, request):
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST,request.FILES)
         if form.is_valid():
             form.save()
             return redirect('product_app:display')
         else:
-            print("Error")
+            print("Form Errors:", form.errors)
             context = {
                 'form': form
             }
