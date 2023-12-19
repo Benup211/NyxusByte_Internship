@@ -43,25 +43,28 @@ class RegisterUser(View):
     def post(self,request):
         register_val=RegisterForm(request.POST)
         if register_val.is_valid():
-            register_val.save()
+            user=register_val.save(commit=False)
+            password=register_val.cleaned_data.get('password')
+            user.set_password(password)
+            user.save()
             return redirect("product_app:login")
-        else:
-            return render(request,'product_app/register.html',{'form':RegisterForm()})
+        register_val.add_error("Enter field value correctly")
+        return render(request,'product_app/register.html',{'form':RegisterForm()})
 class LoginView(View):
     def get(self,request):
         return render(request,'product_app/login.html',{'form':LoginForm()})
     def post(self,request):
         login_val=LoginForm(request.POST)
         if login_val.is_valid():
-            username=login_val['username']
-            password=login_val['password']
+            username=login_val.cleaned_data['username']
+            password=login_val.cleaned_data['password']
             userExist=authenticate(username=username,password=password)
             if userExist is not None:
                 login(request,userExist)
-            return redirect('product_app:display')
-        else:
-            return render(request,'product_app/login.html',{'form':RegisterForm()})
+                return redirect('product_app:display')
+            login_val.add_error('username',"Error username or password")
+        return render(request,'product_app/login.html',{'form':login_val})
 class LogoutView(View):
     def get(self,request):
-        logout(request.user)
+        logout(request)
         return redirect('product_app:login')
