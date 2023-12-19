@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from .forms import ProductForm,RegisterForm,LoginForm
 from .models import Product
@@ -68,3 +68,27 @@ class LogoutView(View):
     def get(self,request):
         logout(request)
         return redirect('product_app:login')
+class UpdateProduct(View):
+    def get(self,request,id):
+        product=get_object_or_404(Product,id=id)
+        product_form=ProductForm(instance=product)
+        context={
+            'form':product_form,
+            'pid':id
+        }
+        return render(request,'product_app/update_product.html',context)
+    def post(self,request,id):
+        product=get_object_or_404(Product,id=id)
+        form=ProductForm(request.POST, request.FILES,instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_app:detail',id)
+        form.add_error('name',"Enter correctly value")
+        return render(request,'product_app/update_product.html',{'form':form,'pid':id})
+class DeleteProduct(View):
+    def post(self,request,id):
+        product=get_object_or_404(Product,id=id)
+        product.delete()
+        return redirect('product_app:display')
+
+        

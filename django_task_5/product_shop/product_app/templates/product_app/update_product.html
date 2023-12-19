@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% block title %}Create Product{% endblock %}
+{% block content %}
+    <div class="container mt-3">
+        <h1>Update Product:</h1>
+        <form method="post" action="{% url 'product_app:update' pid %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

@@ -8,4 +8,6 @@ urlpatterns=[
     path('register/',RegisterUser.as_view(),name="register"),
     path('login/',LoginView.as_view(),name="login"),
     path('logout/',LogoutView.as_view(),name="logout"),
+    path('update/<int:id>/',UpdateProduct.as_view(),name="update"),
+    path('delete/<int:id>/',DeleteProduct.as_view(),name="delete"),
 ]
