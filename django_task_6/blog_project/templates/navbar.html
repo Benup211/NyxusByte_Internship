@@ -13,6 +13,9 @@
             <a class="nav-link {{create_post}}" href="{% url 'blog_app:create' %}">Create Post</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link {{other_blog}}" href="{% url 'blog_app:otherblog' %}">Others Blog</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link text-danger" href="{% url 'blog_app:logout' %}">Logout</a>
           </li>
         </ul>
