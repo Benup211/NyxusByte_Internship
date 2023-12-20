@@ -7,7 +7,6 @@ from .models import *
 class RegisterUser(View):
     def get(self,request):
         return render(request,'blog_app/register.html',{'form':RegisterForm()})
-    
     def post(self,request):
         register_val=RegisterForm(request.POST)
         if register_val.is_valid():
@@ -61,6 +60,7 @@ class create_post(View):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form.save_m2m()
             return redirect("blog_app:all_blog")
         return render(request,"blog_app/create_post.html",{'form':form})
     
@@ -78,7 +78,7 @@ class blog_detail(View):
                 'pub_date':p.pub_date
             }
             for t in p.post_tag.all():
-                tag_list.append(t.tag_user)
+                tag_list.append(t)
             for c in p.post_comment.all():
                 comments[c.comment_user]=c.comment_val
             context["tags"]=tag_list
@@ -116,7 +116,7 @@ class other_detail(View):
                 'pub_date':p.pub_date
             }
             for t in p.post_tag.all():
-                tag_list.append(t.tag_user)
+                tag_list.append(t)
             for c in p.post_comment.all():
                 comments[c.comment_user]=c.comment_val
             context["tags"]=tag_list

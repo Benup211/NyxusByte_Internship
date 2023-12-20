@@ -18,8 +18,11 @@ class LoginForm(forms.Form):
         fields = ['username', 'password']
 
 class Createblog(forms.ModelForm):
-    post_tag = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(), widget=forms.SelectMultiple(attrs={'class': 'form-control'}),to_field_name='id',
-        label='tag_user')
+    post_tag = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        label='Tags'
+    )
     class Meta:
         model=Post
         fields=['title','content','post_tag']
