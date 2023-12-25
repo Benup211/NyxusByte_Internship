@@ -1,4 +1,11 @@
 {% extends 'index.html' %}
 {% block content %}
-    <h1>Home View</h1>
+    {% include 'navbar.html' %}
+    <div class="container mt-3">
+        <div class="card rounded">
+            <div class="card-body">
+              <h2 class="text-center">Hello {{user}}!</h2>
+            </div>
+        </div>
+    </div>
 {% endblock %}
