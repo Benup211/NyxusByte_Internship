@@ -6,5 +6,6 @@ urlpatterns=[
     path('addauthor/',AddAuthor.as_view(),name="addauthor"),
     path('addgenre/',AddGenre.as_view(),name="addgenre"),
     path('login/',stafflogin.as_view(),name="stafflogin"),
-    path('storepanel/',StoreAdminPanel.as_view(),name="storepanel"),
+    path('',StoreAdminPanel.as_view(),name="storepanel"),
+    path('logout/',staffLogout.as_view(),name="logout"),
 ]
