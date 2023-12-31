@@ -19,7 +19,40 @@ class HomeView(View):
         else:
             books = Book.objects.filter(title__icontains=book_val)
         genre=Genre.objects.all()
-        return render(request,'store/home.html',{'books':books,'genre':genre})
+        return render(request,'store/home.html',{'books':books,'genre':genre,'messages':''})
+    def post(self,request):
+        book_id=request.POST.get('book_id')
+        try:
+            check_cart=Cart.objects.get(user=request.user, items__id=book_id)
+            if check_cart is not None:
+                check_cart.quantity+=1
+                check_cart.save()
+                messages='Cart incremented successfully.'
+            else:
+                new_cart=Cart.objects.create(user=request.user, items_id=book_id)
+                new_cart.save()
+                messages='New item added to the cart.'
+        except:
+            new_cart=Cart.objects.create(user=request.user, items_id=book_id)
+            new_cart.save()
+            messages='New item added to the cart.'
+        books=Book.objects.all()
+        genre=Genre.objects.all()
+        return render(request,'store/home.html',{'books':books,'genre':genre,'messages':messages})
+@method_decorator(login_required(login_url='store:login'),name="dispatch")
+class CartView(View):
+    def get(self,request):
+        cart_items=Cart.objects.filter(user=request.user)
+        cart_items_dict = {}
+        for cart_item in cart_items:
+            book_values = {
+                "title": cart_item.items.title,  
+                "price": cart_item.items.price,
+                "book_image": cart_item.items.book_image.url,
+                "quantity": cart_item.quantity,
+            }
+            cart_items_dict[cart_item.id] = book_values
+        return render(request,'store/cart.html',{'cart':cart_items_dict})
 class LoginView(View):
     def get(self,request):
         return render(request,'login.html',{'form':LoginForm()})

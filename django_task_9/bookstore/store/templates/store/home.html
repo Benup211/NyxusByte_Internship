@@ -24,11 +24,20 @@
                     <p class="card-text">Author:{{book.author}}</p>
                     <p class="card-text">{{book.description}}</p>
                     <p class="card-text">Price:{{book.price}}</p>
-                    <a href="#" class="btn btn-primary">Add to cart</a>
+                    <form method="post" action="{% url 'store:home' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+                        <input type="submit" class="btn btn-primary" value="Add to cart">
+                    </form>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
+{% if messages %}
+    <script>
+        alert("{{ messages }}");
+    </script>
+{% endif %}
 {% endblock %}
