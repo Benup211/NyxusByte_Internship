@@ -67,6 +67,16 @@ class LoginView(View):
                 return redirect('store:home')
         loginVal.add_error(None,'Error username or password')
         return render(request,'login.html',{'form':loginVal})
+class RegisterView(View):
+    def get(self,request):
+        return render(request,'store/register.html',{'form':RegisterForm})
+    def post(self,request):
+        register_user=RegisterForm(request.POST)
+        if register_user.is_valid():
+            register_user.instance.is_active = False
+            register_user.save()
+            return redirect('store:login')
+        return render(request,'store/register.html',{'form':RegisterForm})
 @method_decorator(login_required(login_url='store:login'),name="dispatch")
 class LogoutView(View):
     def get(self,request):
