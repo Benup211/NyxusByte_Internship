@@ -1,5 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User=get_user_model()
+import uuid
+from django.utils import timezone
 # Create your models here.
 class Author(models.Model):
     name=models.CharField(max_length=50)
@@ -24,3 +27,9 @@ class Cart(models.Model):
     quantity=models.IntegerField(default=1)
     def __str__(self)->str:
         return "user:"+str(self.user)+" order";
+class EmailTokenGeneration(models.Model):
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
+    token=models.UUIDField(default=uuid.uuid4,editable=False,unique=True)
+    created_at=models.DateField(default=timezone.now)
+    def __str__(self) -> str:
+        return str(self.token)

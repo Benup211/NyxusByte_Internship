@@ -7,4 +7,5 @@ urlpatterns=[
     path('logout/',LogoutView.as_view(),name="logout"),
     path('cart/',CartView.as_view(),name="cart"),
     path('register/',RegisterView.as_view(),name="register"),
+    path('confirm-email/<str:token>/',ConfirmEmail.as_view(),name="confirm"),
 ]

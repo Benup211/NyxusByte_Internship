@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from django.http import HttpResponse
 from .models import *
@@ -59,13 +59,13 @@ class LoginView(View):
     def post(self,request):
         loginVal=LoginForm(request.POST)
         if loginVal.is_valid():
-            username=loginVal.cleaned_data['username']
+            email=loginVal.cleaned_data['email']
             password=loginVal.cleaned_data['password']
-            getUser=authenticate(username=username,password=password)
+            getUser=authenticate(email=email,password=password)
             if getUser is not None:
                 login(request,getUser)
                 return redirect('store:home')
-        loginVal.add_error(None,'Error username or password')
+        loginVal.add_error(None,'Error Email or password')
         return render(request,'login.html',{'form':loginVal})
 class RegisterView(View):
     def get(self,request):
@@ -73,7 +73,6 @@ class RegisterView(View):
     def post(self,request):
         register_user=RegisterForm(request.POST)
         if register_user.is_valid():
-            register_user.instance.is_active = False
             register_user.save()
             return redirect('store:login')
         return render(request,'store/register.html',{'form':RegisterForm})
@@ -82,3 +81,13 @@ class LogoutView(View):
     def get(self,request):
         logout(request)
         return redirect('store:login')
+class ConfirmEmail(View):
+    def get(self,request,token):
+        user_match=get_object_or_404(EmailTokenGeneration,token=token)
+        user=user_match.user
+        if user.is_active:
+            return HttpResponse("Your email has already been confirmed.")
+        else:
+            user.is_active=True
+            user.save()
+            return render(request,'store/email_sucess.html')

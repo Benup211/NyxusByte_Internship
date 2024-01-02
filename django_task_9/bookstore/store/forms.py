@@ -2,8 +2,12 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import EmailTokenGeneration
 class LoginForm(forms.Form):
-   username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+   email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
 class RegisterForm(UserCreationForm):
@@ -31,3 +35,20 @@ class RegisterForm(UserCreationForm):
         if email_exists:
             raise forms.ValidationError("This email address is already in use.")
         return cleaned_data
+    def save(self,commit=True):
+        user=super().save(commit=False)
+        if commit:
+            user.is_active=False
+            user.save()
+            token=EmailTokenGeneration.objects.create(user=user)
+            email_confirmation(user,token)
+        return user
+def email_confirmation(user,email_token):
+    subject="Confirm Your Email"
+    message=render_to_string('store/email_confirm.html',{
+        'user':user,
+        'confirm_url':f'http://127.0.0.1:8000/confirm-email/{email_token}/'
+    })
+    from_email = settings.EMAIL_HOST_USER
+    to_email = user.email
+    send_mail(subject,message,from_email,[to_email],fail_silently=False)
