@@ -6,7 +6,8 @@ from .forms import *
 from django.contrib.auth import authenticate,login,logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-
+import pyotp
+from django.conf import settings
 @method_decorator(login_required(login_url='store:login'),name="dispatch")
 class HomeView(View):
     def get(self,request):
@@ -63,10 +64,35 @@ class LoginView(View):
             password=loginVal.cleaned_data['password']
             getUser=authenticate(email=email,password=password)
             if getUser is not None:
-                login(request,getUser)
-                return redirect('store:home')
+                secret_key = pyotp.random_base32()
+                motp=pyotp.TOTP(secret_key)
+                otp=motp.now()
+                request.session['otp']=otp
+                request.session['otp_user']=getUser.id
+                send_mail("OTP Number",f"Your OTP is {otp}",settings.EMAIL_HOST_USER,[email])
+                return redirect("store:otpverify")
         loginVal.add_error(None,'Error Email or password')
         return render(request,'login.html',{'form':loginVal})
+class OTPVerification(View):
+    def get(self,request):
+        return render(request,'store/otpverify.html',{'form':OTPform})
+    def post(self,request):
+        otpform=OTPform(request.POST)
+        if otpform.is_valid():
+            otp=otpform.cleaned_data['otpvalue']
+            otp_in_session=request.session.get('otp')
+            otp_user=request.session.get('otp_user')
+            if otp_user is None:
+                return redirect('store:login')
+            if otp==otp_in_session:
+                user = User.objects.get(id=otp_user)
+                if user is not None:
+                    login(request,user,backend='store.customauth.EmailBackend')
+                    del request.session['otp']
+                    del request.session['otp_user']
+                    return redirect('store:home')
+        print(otpform.errors)
+        return render(request,'store/otpverify.html',{'form':otpform,'error':'OTP verification failed'})
 class RegisterView(View):
     def get(self,request):
         return render(request,'store/register.html',{'form':RegisterForm})

@@ -8,4 +8,5 @@ urlpatterns=[
     path('cart/',CartView.as_view(),name="cart"),
     path('register/',RegisterView.as_view(),name="register"),
     path('confirm-email/<str:token>/',ConfirmEmail.as_view(),name="confirm"),
+    path('login/otpcode/',OTPVerification.as_view(),name="otpverify")
 ]

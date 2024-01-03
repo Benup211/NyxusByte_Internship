@@ -52,3 +52,5 @@ def email_confirmation(user,email_token):
     from_email = settings.EMAIL_HOST_USER
     to_email = user.email
     send_mail(subject,message,from_email,[to_email],fail_silently=False)
+class OTPform(forms.Form):
+    otpvalue=forms.CharField(label='Enter OTP',widget=forms.TextInput(attrs={'class':'form-control'}))
