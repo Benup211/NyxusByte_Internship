@@ -30,6 +30,11 @@
             </div>
         {% endfor %}
     </div>
-    <button class="btn btn-success" onclick="alert('Order Sent')">Check Out</button>
+    <form method="post" action="{% url 'store:cart' %}">
+        {% csrf_token %}
+        <label for="coupon_id">Enter coupons: </label>
+        <input type="text" placeholder="Enter coupons code" name="coupon" id="coupon_id" class="form-control">
+        <input class="btn btn-success d-block mt-1" type="submit" value="Checkout">
+    </form>
 </div>
 {% endblock %}

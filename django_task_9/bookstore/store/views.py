@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 import pyotp
 from django.conf import settings
+from django.core.mail import send_mail
 @method_decorator(login_required(login_url='store:login'),name="dispatch")
 class HomeView(View):
     def get(self,request):
@@ -54,6 +55,20 @@ class CartView(View):
             }
             cart_items_dict[cart_item.id] = book_values
         return render(request,'store/cart.html',{'cart':cart_items_dict})
+    def post(self,request):
+        cart_items=Cart.objects.filter(user=request.user)
+        book_ordered=""
+        coupon=request.POST.get('coupon')
+        for cart_item in cart_items:
+            title=cart_item.items.title
+            quantity=cart_item.quantity
+            price=cart_item.items.price*quantity
+            book_ordered+=f"Name:{title} Quantity:{quantity} Price:{price}\n"
+        book_ordered+=f"coupon:{coupon}"
+        subject="Book Ordered"
+        send_mail(subject,book_ordered,settings.EMAIL_HOST_USER,[request.user.email])
+        cart_items.delete()
+        return render(request,'store/cart.html',{'cart':''})
 class LoginView(View):
     def get(self,request):
         return render(request,'login.html',{'form':LoginForm()})
