@@ -33,3 +33,7 @@ class EmailTokenGeneration(models.Model):
     created_at=models.DateField(default=timezone.now)
     def __str__(self) -> str:
         return str(self.token)
+class Comment(models.Model):
+    value=models.TextField(blank=False)
+    comment_user=models.ForeignKey(User,on_delete=models.CASCADE)
+    book=models.ForeignKey(Book,on_delete=models.CASCADE)

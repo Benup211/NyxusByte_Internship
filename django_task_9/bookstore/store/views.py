@@ -132,3 +132,16 @@ class ConfirmEmail(View):
             user.is_active=True
             user.save()
             return render(request,'store/email_sucess.html')
+@method_decorator(login_required(login_url='store:login'),name="dispatch")
+class BookDetail(View):
+    def get(self,request,book_id):
+        book=Book.objects.get(id=book_id)
+        comments=Comment.objects.filter(book=book_id)
+        return render(request,'store/bookdetail.html',{'book':book,'comments':comments})
+    def post(self,request,book_id):
+        comment_value=request.POST.get('comment')
+        book=Book.objects.get(id=book_id)
+        comment_creation=Comment.objects.create(value=comment_value,comment_user=request.user,book=book)
+        comment_creation.save()
+        comments=Comment.objects.filter(book=book_id)
+        return render(request,'store/bookdetail.html',{'book':book,'comments':comments})
